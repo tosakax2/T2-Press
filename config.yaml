@@ -1,0 +1,4 @@
+site_name: "T2-Press サンプルサイト" # サイトの正式名称
+base_url: "/" # サイトのルートURL（ローカル開発なら "/"）
+theme: "default" # 使用するテーマ名（themes/defaultを指す）
+output_dir: "_output" # 静的ファイル出力先ディレクトリ
