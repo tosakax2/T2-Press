@@ -8,14 +8,22 @@
     <link rel="stylesheet" href="{{ base_url }}static/css/pygments.css" />
   </head>
   <body>
-    <header>
-      <p><a href="{{ base_url }}">{{ site_name }}</a></p>
+    <header class="site-header">
+      <div class="site-header-title">
+        <a href="{{ base_url }}">{{ site_name }}</a>
+      </div>
+      <nav class="site-header-nav">
+        <a class="site-header-nav-link" href="{{ base_url }}">Home</a>
+        <a class="site-header-nav-link" href="{{ base_url }}archives">Archives</a>
+        <a class="site-header-nav-link" href="{{ base_url }}about">About</a>
+        <a class="site-header-nav-link" href="{{ base_url }}links">links</a>
+      </nav>
     </header>
 
     <main>{% block content %}{% endblock %}</main>
 
-    <footer>
-      <small class="copyright">&copy; {{ site_name }}</small>
+    <footer class="site-footer">
+      <small class="site-footer-copyright">&copy; {{ site_name }}</small>
     </footer>
   </body>
 </html>

@@ -11,29 +11,49 @@ body {
     line-height: 1.6;
 }
 
-header {
-    font-size: 2.25rem;
-    position: fixed;
+/* サイト全体のヘッダー */
+.site-header {
+    position: sticky;
     width: 100%;
     top: 0;
     z-index: 1000;
-    background-color: white;  /* 必須！透け防止 */
+    background-color: {{ theme.colors.site_header_background }};
 }
 
-footer {
+.site-header-title {
+    font-size: 2.25rem;
+    font-weight: bold;
+    color: {{ theme.colors.site_header_title_text }};
+    text-decoration: none;
+}
+
+.site-header-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+}
+
+.site-header-nav-link {
+    font-size: 1rem;
+    color: {{ theme.colors.site_header_nav_link_text }};
+    text-decoration: none;
+}
+
+/* サイト全体のフッター */
+.site-footer {
     font-size: 2.25rem;
 }
 
-footer > .copyright {
-    font-size: 0.6rem;
+.site-footer-copyright {
+    font-size: 0.8rem;
 }
 
 /* 全体的な囲い */
-.parent-card {
-    background-color: {{ theme.colors.parent_card_background }};
-    border-radius: 8px;
-    padding: 16px;
-    margin: 8px;
+.wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem;
 }
 
 /* 記事タイトル */
@@ -62,8 +82,8 @@ h3 {
 /* コードインライン */
 code {
     font-family: {{ theme.fonts.code }};
-    background-color: {{ theme.colors.code_inline_background }};
-    color: {{ theme.colors.code_inline_text }};
+    background-color: {{ theme.colors.code_background }};
+    color: {{ theme.colors.code_text }};
     font-size: 0.85rem;
     line-height: 1.4;
     border-radius: 4px;

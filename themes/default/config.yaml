@@ -4,13 +4,17 @@ fonts:
 
 colors:
   primary: "#ff3344"
+
   background: "#ffebeb"
   text: "#111111"
-  parent_card_background: "#ffffff"
-  code_inline_background: "#f2f2f2"
-  code_inline_text: "red"
+
+  code_background: "#f2f2f2"
+  code_text: "red"
   code_block_background: "#111111"
   code_block_text: "#dddddd"
+
+  site_header_background: "#ffffff"
+  site_header_nav_link_text: "#333333"
 
 images:
   default_thumbnail: "/static/images/default-thumbnail.png"
