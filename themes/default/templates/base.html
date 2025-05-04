@@ -19,11 +19,11 @@
         </nav>
       </div>
     </header>
-
     <div class="site-header-spacer"></div>
-    <div class="width-constraint">
-      <main>{% block content %}{% endblock %}</main>
-    </div>
+
+    <main class="site-main">
+      <div class="width-constraint">{% block content %}{% endblock %}</div>
+    </main>
 
     <footer class="site-footer">
       <div class="width-constraint">

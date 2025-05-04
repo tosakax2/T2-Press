@@ -3,10 +3,13 @@ fonts:
   code: '"Consolas", "Source Han Code JP", monospace'
 
 colors:
-  primary: "#ff3344"
+  master_accent: "#ff715e"
+  master_background: "#beb9ad"
+  master_text: "#111111"
+  master_divider: "#999999"
 
-  background: "#ffebeb"
-  text: "#111111"
+  header_background1: "#111111"
+  header_background2: "#333333"
 
   code_background: "#f2f2f2"
   code_text: "red"
@@ -15,6 +18,8 @@ colors:
 
   site_header_background: "#ffffff"
   site_header_nav_link_text: "#333333"
+
+  site_header_title_text: "#beb9ad"
 
 images:
   default_thumbnail: "/static/images/default-thumbnail.png"
