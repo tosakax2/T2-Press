@@ -13,7 +13,8 @@ body {
 
 header {
     font-size: 2.25rem;
-    position: sticky;
+    position: fixed;
+    width: 100%;
     top: 0;
     z-index: 1000;
     background-color: white;  /* 必須！透け防止 */
@@ -66,7 +67,7 @@ code {
     font-size: 0.85rem;
     line-height: 1.4;
     border-radius: 4px;
-    padding: 4px;
+    padding: 0.2rem;
 }
 
 /* コードブロック */
@@ -78,7 +79,7 @@ code {
 pre {
     font-family: {{ theme.fonts.code }};
     color: {{ theme.colors.code_block_text }};
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     line-height: 1.5;
     overflow-x: auto;
     padding: 0.85rem 0.9rem;
