@@ -1,8 +1,21 @@
-/* サイト全体 */
+/* --- CSSリセット --- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+html, body {
+    height: 100%;
+    font-family: sans-serif;
+}
+
+
+/* --- サイト全体 --- */
 html {
     font-size: 16px;
 }
-
 body {
     font-family: {{ theme.fonts.base }};
     background-color: {{ theme.colors.background }};
@@ -11,58 +24,56 @@ body {
     line-height: 1.6;
 }
 
-/* サイト全体のヘッダー */
+/* --- サイト全体の幅 --- */
+.width-constraint {
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+/* --- サイト全体のヘッダー --- */
 .site-header {
-    position: sticky;
-    width: 100%;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
     z-index: 1000;
     background-color: {{ theme.colors.site_header_background }};
 }
-
 .site-header-title {
     font-size: 2.25rem;
     font-weight: bold;
     color: {{ theme.colors.site_header_title_text }};
-    text-decoration: none;
 }
-
 .site-header-nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 2rem;
+    padding: 0.5rem 4rem;
 }
-
 .site-header-nav-link {
     font-size: 1rem;
     color: {{ theme.colors.site_header_nav_link_text }};
     text-decoration: none;
 }
-
-/* サイト全体のフッター */
-.site-footer {
-    font-size: 2.25rem;
+.site-header-spacer {
+    height: 100px;
 }
 
+/* --- サイト全体のフッター --- */
+.site-footer {
+    font-size: 0.9rem;
+}
 .site-footer-copyright {
     font-size: 0.8rem;
 }
 
-/* 全体的な囲い */
-.wrapper {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 1rem;
-}
-
-/* 記事タイトル */
+/* --- 記事タイトル --- */
 h1 {
     font-size: 2.25rem;
     font-weight: bold;
     line-height: 1.3;
 }
-
 h2 {
     font-size: 1.75rem;
     font-weight: bold;
@@ -72,14 +83,13 @@ h2 {
     background-color: #fffaf4;
     border-left: solid 5px #ffaf58;
 }
-
 h3 {
     font-size: 1.25rem;
     font-weight: bold;
     line-height: 1.4;
 }
 
-/* コードインライン */
+/* --- コードインライン --- */
 code {
     font-family: {{ theme.fonts.code }};
     background-color: {{ theme.colors.code_background }};
@@ -90,12 +100,11 @@ code {
     padding: 0.2rem;
 }
 
-/* コードブロック */
+/* --- コードブロック --- */
 .code-block {
     background-color: {{ theme.colors.code_block_background }};
     border-radius: 5px;
 }
-
 pre {
     font-family: {{ theme.fonts.code }};
     color: {{ theme.colors.code_block_text }};
