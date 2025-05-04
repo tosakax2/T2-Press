@@ -8,22 +8,24 @@ colors:
   master_text: "#111111"
   master_divider: "#999999"
 
-  header_background1: "#111111"
-  header_background2: "#333333"
+  link_text: "#555555"
+
+  stripe_background1: "#111111"
+  stripe_background2: "#333333"
+  stripe_text: "#beb9ad"
+
+  site_header_title_text: "#111111"
+
+  container_background: "#f2f2f2"
 
   code_background: "#f2f2f2"
   code_text: "red"
   code_block_background: "#111111"
   code_block_text: "#dddddd"
 
-  site_header_background: "#ffffff"
-  site_header_nav_link_text: "#333333"
-
-  site_header_title_text: "#beb9ad"
+  table_header_background: "#999999"
+  table_background: "#beb9ad"
+  table_border: "#111111"
 
 images:
   default_thumbnail: "/static/images/default-thumbnail.png"
-
-layout:
-  max_width: "720px"
-  border_radius: "8px"

@@ -1,15 +1,90 @@
-/* --- CSSリセット --- */
-*,
-*::before,
-*::after {
+/* ==========================================
+   RESET CSS（完全リセット）
+   ========================================== */
+
+/* ボックスサイズを border-box に統一 */
+*, *::before, *::after {
     box-sizing: border-box;
+}
+
+/* 全てのマージン・パディングをゼロに */
+body, h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+dl, dd, ol, ul, figure, hr, fieldset, legend,
+table, th, td, input, button {
     margin: 0;
     padding: 0;
 }
-html, body {
-    height: 100%;
-    font-family: sans-serif;
+
+th, td {
+    border: none;
+    text-align: left;
 }
+
+/* リストのマーカーを削除 */
+ul, ol {
+    list-style: none;
+}
+
+/* 引用符・イタリックなどのブラウザ装飾を削除 */
+blockquote, q {
+    quotes: none;
+}
+
+blockquote::before, blockquote::after,
+q::before, q::after {
+    content: '';
+}
+
+/* テーブルのボーダー間隔をリセット */
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* HTML5要素を block として扱う（古いIE対策） */
+article, aside, details, figcaption, figure,
+footer, header, main, nav, section, summary {
+    display: block;
+}
+
+/* フォーム要素の見た目をリセット */
+input, textarea, select, button {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: none;
+    outline: none;
+    appearance: none;
+}
+
+/* 強調・リンク色を初期化 */
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+em, i, strong, b {
+    font-style: normal;
+    font-weight: normal;
+}
+
+/* 画像の隙間対策（下に余白ができる問題） */
+img {
+    vertical-align: bottom;
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* ボディの基本フォント設定 */
+body {
+    line-height: 1;
+    font-family: sans-serif;
+    background: #fff;
+    color: #000;
+}
+/* ========================================== */
+
 
 /* --- サイト全体 --- */
 html {
@@ -23,53 +98,65 @@ body {
     line-height: 1.6;
 }
 
-/* --- サイト全体の幅制限 --- */
-.width-constraint {
-    max-width: 960px;
-    margin: 0 auto;
-}
-
-/* --- サイト全体のヘッダー --- */
-.site-header {
+/* --- サイト全体のナビゲーション --- */
+.site-nav {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    width: 100%;
     z-index: 1000;
-    background-image: repeating-linear-gradient(
-        45deg,
-        {{ theme.colors.header_background1 }},
-        {{ theme.colors.header_background2 }} 1px,
-        {{ theme.colors.header_background1 }},
-        {{ theme.colors.header_background2 }} 1px
-    );
-
-    border-bottom: solid 8px {{ theme.colors.master_accent }};
-}
-.site-header-title {
-    font-size: 2.25rem;
-    font-weight: bold;
-    color: {{ theme.colors.site_header_title_text }};
-}
-.site-header-nav {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    padding: 0.5rem 4rem;
+
+    width: 100%;
+    height: 64px;
+    border-bottom: solid 4px {{ theme.colors.master_accent }};
+    background: repeating-linear-gradient(
+        135deg,
+        {{ theme.colors.stripe_background1 }},
+        {{ theme.colors.stripe_background1 }} 2px,
+        {{ theme.colors.stripe_background2 }} 2px,
+        {{ theme.colors.stripe_background2 }} 4px
+    );
 }
-.site-header-nav-link {
+.site-nav-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 0 1.5rem;
+    box-sizing: border-box;
+
     font-size: 1rem;
-    color: {{ theme.colors.site_header_nav_link_text }};
+    font-weight: bold;
+    color: {{ theme.colors.stripe_text }};
     text-decoration: none;
 }
-.site-header-spacer {
-    height: 120px;
+.site-nav-link:hover {
+    background-color: {{ theme.colors.master_accent }};
+    color: {{ theme.colors.stripe_background1 }};
+}
+.site-nav-link > .material-icons-outlined {
+    font-size: 1.35rem;
+    margin-right: 0.5rem;
 }
 
-/* --- サイト全体のメインコンテンツ --- */
-.site-main {
-    margin: 16px;
+/* --- サイト全体のヘッダー --- */
+.site-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    padding: 1rem 0;
+
+    color: {{ theme.colors.master_text }};
+}
+.site-header-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    line-height: 1.3;
 }
 
 /* --- サイト全体のフッター --- */
@@ -85,36 +172,51 @@ h1 {
     font-size: 2.25rem;
     font-weight: bold;
     line-height: 1.3;
-    margin: 2rem 0 1rem;
+    text-align: center;
 }
 h2 {
+    margin: 2rem 0 1rem;
+    padding: 0.5em;
+    border-left: solid 8px {{ theme.colors.master_accent }};
+    border-radius: 8px 2px 2px 8px;
+
     font-size: 1.75rem;
     font-weight: bold;
     line-height: 1.35;
-    margin: 2rem 0 1rem;
-
-    padding: 0.5em;
-    background-color: #fffaf4;
-    border-left: solid 8px {{ theme.colors.master_accent }};
-    border-radius: 8px 2px 2px 8px;
 }
 h3 {
     font-size: 1.25rem;
     font-weight: bold;
     line-height: 1.4;
-    margin: 1.5rem 0 0.75rem;
+    margin: 1.5rem 0 0.75rem 1rem;
 }
 
 /* --- 本文 ---*/
 p {
     font-size: 1rem;
     line-height: 1.6;
-    maring: 0 0 1.25rem;
+    margin: 0 1.5rem;
+}
+
+/* --- リンク --- */
+a {
+    color: {{ theme.colors.link_text }};
+    text-decoration: none;
 }
 
 /* --- リスト --- */
-ul, ol {
+ul {
+    list-style: disc;
+    font-size: 1rem;
     padding-left: 1.5rem;
+}
+ol {
+    list-style: decimal;
+    font-size: 1rem;
+    padding-left: 1.5rem;
+}
+ol ::marker {
+    font-weight: bold;
 }
 
 /* --- 区切り線 --- */
@@ -148,4 +250,39 @@ pre {
     line-height: 1.5;
     overflow-x: auto;
     padding: 0.85rem 0.9rem;
+}
+
+/* --- テーブル --- */
+table {
+    border: solid 2px {{ theme.colors.table_border }};
+    margin: 1.5rem;
+}
+th {
+    background-color: {{ theme.colors.table_header_background }};
+    font-size: 0.9rem;
+    font-weight: bold;
+    border: solid 1px {{ theme.colors.table_border }};
+    padding: 0.25rem 0.5rem;
+    min-width: 5rem;
+}
+td {
+    background-color: {{ theme.colors.table_background }};
+    font-size: 0.9rem;
+    border: solid 1px {{ theme.colors.table_border }};
+    padding: 0.25rem 0.5rem;
+    min-width: 5rem;
+}
+
+/* --- 画像 ---*/
+img {
+    border-radius: 8px;
+    margin: 0 auto;
+    display: block;
+}
+
+/* --- 動画 ---*/
+iframe {
+    border-radius: 8px;
+    margin: 0 auto;
+    display: block;
 }

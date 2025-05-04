@@ -6,29 +6,38 @@
     <link rel="icon" href="{{ base_url }}src/favicon/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="{{ base_url }}static/css/style.css" />
     <link rel="stylesheet" href="{{ base_url }}static/css/pygments.css" />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+      rel="stylesheet"
+    />
   </head>
   <body>
+    <nav class="site-nav">
+      <a class="site-nav-link" href="{{ base_url }}">
+        <span class="material-icons-outlined">home</span>
+        Home
+      </a>
+      <a class="site-nav-link" href="{{ base_url }}archives">
+        <span class="material-icons-outlined">archive</span>
+        Archives
+      </a>
+      <a class="site-nav-link" href="{{ base_url }}about">
+        <span class="material-icons-outlined">info</span>
+        About
+      </a>
+      <a class="site-nav-link" href="{{ base_url }}links">
+        <span class="material-icons-outlined">link</span>
+        links
+      </a>
+    </nav>
     <header class="site-header">
-      <div class="width-constraint">
-        <a class="site-header-title" href="{{ base_url }}">{{ site_name }}</a>
-        <nav class="site-header-nav">
-          <a class="site-header-nav-link" href="{{ base_url }}">Home</a>
-          <a class="site-header-nav-link" href="{{ base_url }}archives">Archives</a>
-          <a class="site-header-nav-link" href="{{ base_url }}about">About</a>
-          <a class="site-header-nav-link" href="{{ base_url }}links">links</a>
-        </nav>
-      </div>
+      <h1 class="site-header-title">{{ header_title }}</h1>
     </header>
-    <div class="site-header-spacer"></div>
 
-    <main class="site-main">
-      <div class="width-constraint">{% block content %}{% endblock %}</div>
-    </main>
+    <main>{% block main %} {% endblock %}</main>
 
     <footer class="site-footer">
-      <div class="width-constraint">
-        <small class="site-footer-copyright">&copy; {{ site_name }}</small>
-      </div>
+      <small class="site-footer-copyright">&copy; {{ site_name }}</small>
     </footer>
   </body>
 </html>
