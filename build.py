@@ -4,7 +4,8 @@
 # ============================
 
 # --- 必要な標準ライブラリをインポート ---
-import os  # OS関連の操作（環境変数取得など）
+import os
+import logging  # ログ出力用  # OS関連の操作（環境変数取得など）
 import re  # 正規表現操作
 import shutil  # ファイル・ディレクトリ操作（コピー、削除など）
 import yaml  # YAML形式の設定ファイルを読み込むため
@@ -28,15 +29,18 @@ from pygments.lexers import get_lexer_by_name, TextLexer  # 言語ごとのパ�
 from pygments.formatters import HtmlFormatter  # HTML用のフォーマッタ
 
 # --- 定数設定 ---
-VERBOSE = True  # Trueにするとログ出力あり
+VERBOSE = False  # 通常は詳細ログ（DEBUG）は非表示にする
+
+# --- ロガー初期化 ---
+logging.basicConfig(
+    level=logging.DEBUG if VERBOSE else logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    datefmt="%H:%M:%S"
+)
+logger = logging.getLogger(__name__)
+
 CONFIG_PATH = "config.yaml"  # サイト基本設定ファイルのパス
 THEME_CONFIG_PATH_TEMPLATE = "themes/{}/config.yaml"  # テーマごとの設定ファイルパス
-
-# --- ログ出力関数 ---
-def log(msg):
-    """冗長モードが有効なときのみログを出力"""
-    if VERBOSE:
-        print(msg)
 
 # --- YAML設定ファイルを安全に読み込む関数 ---
 def load_yaml(path):
@@ -46,12 +50,12 @@ def load_yaml(path):
     """
     try:
         if not Path(path).exists():
-            log(f"⚠️ YAMLファイルが見つかりません: {path}")
+            logger.info(f"⚠️ YAMLファイルが見つかりません: {path}")
             return {}
         with open(path, "r", encoding="utf-8") as f:
             return yaml.safe_load(f)
     except Exception as e:
-        log(f"❌ YAML読み込み失敗: {path} ({e})")
+        logger.info(f"❌ YAML読み込み失敗: {path} ({e})")
         return {}
 
 # --- ディレクトリを安全に作成する関数 ---
@@ -68,7 +72,7 @@ NOTION_DATABASE_ID = os.getenv("NOTION_DATABASE_ID")  # データベースID
 
 # 環境変数が設定されていなければ即終了
 if not NOTION_TOKEN or not NOTION_DATABASE_ID:
-    log("❌ 環境変数 NOTION_TOKEN または NOTION_DATABASE_ID が未設定です")
+    logger.error("❌ 環境変数 NOTION_TOKEN または NOTION_DATABASE_ID が未設定です")
     exit(1)
 
 # --- サイト設定・テーマ設定の読み込み ---
@@ -191,7 +195,7 @@ def render_block_html(block, notion):
 
     if btype == "code":
         lang = data.get("language", "").strip().lower()
-        log(f"💡 コードブロック言語: '{lang}'")
+        logger.info(f"💡 コードブロック言語: '{lang}'")
 
         # コード本文をプレーンテキストとして連結
         code_text = "".join(t.get("plain_text", "") for t in data.get("rich_text", []))
@@ -200,7 +204,7 @@ def render_block_html(block, notion):
         try:
             lexer = get_lexer_by_name(lang) if lang else TextLexer()
         except Exception:
-            log(f"⚠️ 未対応の言語 '{lang}' → fallback to TextLexer")
+            logger.info(f"⚠️ 未対応の言語 '{lang}' → fallback to TextLexer")
             lexer = TextLexer()
 
         formatter = HtmlFormatter(nowrap=True)  # <span>だけ出力
@@ -246,7 +250,7 @@ def render_block_html(block, notion):
         return f'<figure><img src="{image_url}" alt="{caption}" style="max-width:100%;"/><figcaption>{caption}</figcaption></figure>'
 
     # 未サポートブロック
-    log(f"⚠️ 未対応のブロックタイプ: {btype}")
+    logger.info(f"⚠️ 未対応のブロックタイプ: {btype}")
     return f"<div>{text}</div>"
 
 # --- Notionからデータを取得してHTMLを生成するメイン関数 ---
@@ -256,11 +260,11 @@ def notion_pull():
     各記事は個別のフォルダに格納され、トップページ(index.html)も自動生成される。
     """
 
-    log("🚀 Notionデータの取得とHTML出力を開始します")
+    logger.info("🚀 Notionデータの取得とHTML出力を開始します")
 
     # --- 出力ディレクトリの初期化 ---
     if OUTPUT_DIR.exists():
-        log(f"📁 既存の出力先 {OUTPUT_DIR} を削除します")
+        logger.info(f"📁 既存の出力先 {OUTPUT_DIR} を削除します")
         shutil.rmtree(OUTPUT_DIR)  # 出力フォルダを丸ごと削除（クリーンビルド）
     OUTPUT_DIR.mkdir()  # 出力先のルートを作成
     (OUTPUT_DIR / "posts").mkdir(parents=True, exist_ok=True)  # 記事用フォルダを作成
@@ -270,7 +274,7 @@ def notion_pull():
     output_static = OUTPUT_DIR / "static"
 
     if theme_static.exists():
-        log("📂 テーマ static ファイルをコピー中...")
+        logger.info("📂 テーマ static ファイルをコピー中...")
         for item in theme_static.rglob("*"):
             rel_path = item.relative_to(theme_static)
 
@@ -290,7 +294,7 @@ def notion_pull():
 
     # --- src フォルダの中身をコピー（任意の静的素材） ---
     if Path("src").exists():
-        log("📦 src ディレクトリをコピーします")
+        logger.info("📦 src ディレクトリをコピーします")
         shutil.copytree("src", OUTPUT_DIR / "src")
 
     # --- Jinja2 テンプレート読み込み（post, index） ---
@@ -305,7 +309,7 @@ def notion_pull():
             filter={"property": "公開", "checkbox": {"equals": True}}  # 公開フラグがONのものだけ取得
         )
     except (APIResponseError, requests.exceptions.RequestException) as e:
-        log(f"❌ Notion APIエラー: {e}")
+        logger.info(f"❌ Notion APIエラー: {e}")
         raise
 
     posts_info = []  # トップページに表示する記事一覧用データ
@@ -322,7 +326,7 @@ def notion_pull():
         slug = to_slug(title)
         page_id = page["id"]
 
-        log(f"📝 記事: {title} (slug: {slug})")
+        logger.info(f"📝 記事: {title} (slug: {slug})")
 
         # 記事本文（ブロック）を取得
         blocks = notion.blocks.children.list(block_id=page_id)["results"]
@@ -371,7 +375,7 @@ def notion_pull():
     with open(OUTPUT_DIR / "index.html", "w", encoding="utf-8") as f:
         f.write(tpl_index.render(posts=posts_info, **render_context))
 
-    log("✅ サイト生成完了")
+    logger.info("✅ サイト生成完了")
 
 # --- ローカル開発用サーバー起動関数 ---
 def serve():
