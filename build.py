@@ -176,6 +176,7 @@ def render_block_html(block, notion):
     """
     ブロックタイプに応じたHTML出力を行う
     - 見出し、段落、引用、コード、リスト、チェックボックス、表、画像、動画など
+    - セルごとに `th:: ` をプレフィックスとして使えば <th> に変換される
     - サポートされないタイプは警告を出してデフォルト表示
     """
     btype = block["type"]  # ブロックの型
@@ -220,13 +221,36 @@ def render_block_html(block, notion):
         return f'<div class="checkbox"><label><input type="checkbox" disabled {checked}> {text}</label></div>'
 
     if btype == "table":
-        # 子要素（行）を取得
         rows = notion.blocks.children.list(block_id=block["id"])['results']
         table_html = "<table>"
-        for i, row in enumerate(rows):
+        for row in rows:
             cells = row.get("table_row", {}).get("cells", [])
-            tag = "th" if i == 0 else "td"  # 1行目のみヘッダー扱い
-            table_html += "<tr>" + "".join(f"<{tag}>{render_rich_text(cell)}</{tag}>" for cell in cells) + "</tr>"
+            table_html += "<tr>"
+            for cell in cells:
+                raw = render_rich_text(cell).strip()
+
+                # --- 斜め線セル（corner::） ---
+                if raw.startswith("corner::"):
+                    content = raw.split("::", 1)[-1]
+                    table_html += '''
+    <th class="corner-cell">
+    <svg class="corner-line" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <line x1="0" y1="0" x2="100" y2="100" stroke="black" stroke-width="2"/>
+    </svg>
+    %s
+    </th>
+    ''' % content
+
+                # --- 普通の見出しセル（th::） ---
+                elif raw.startswith("th::"):
+                    content = raw[4:]
+                    table_html += f"<th>{content}</th>"
+
+                # --- 通常セル ---
+                else:
+                    table_html += f"<td>{raw}</td>"
+
+            table_html += "</tr>"
         return table_html + "</table>"
 
     if btype == "embed":

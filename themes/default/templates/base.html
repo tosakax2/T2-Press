@@ -2,6 +2,7 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{{ title }} | {{ site_name }}</title>
     <link rel="icon" href="{{ base_url }}src/favicon/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="{{ base_url }}static/css/style.css" />
@@ -12,35 +13,43 @@
     />
   </head>
   <body>
-    <nav class="site-nav">
-      <a class="site-nav-link" href="{{ base_url }}">
-        <span class="material-icons-outlined">home</span>
-        Home
-      </a>
-      <a class="site-nav-link" href="{{ base_url }}archives">
-        <span class="material-icons-outlined">archive</span>
-        Archives
-      </a>
-      <a class="site-nav-link" href="{{ base_url }}about">
-        <span class="material-icons-outlined">info</span>
-        About
-      </a>
-      <a class="site-nav-link" href="{{ base_url }}links">
-        <span class="material-icons-outlined">link</span>
-        links
-      </a>
-      <div class="site-nav-loader"></div>
-    </nav>
+    <div class="site-wrapper">
+      <nav class="site-nav">
+        <a class="site-nav-link" href="{{ base_url }}">
+          <span class="material-icons-outlined">home</span>
+          Home
+        </a>
+        <a class="site-nav-link" href="{{ base_url }}archives">
+          <span class="material-icons-outlined">archive</span>
+          Archives
+        </a>
+        <a class="site-nav-link" href="{{ base_url }}about">
+          <span class="material-icons-outlined">info</span>
+          About
+        </a>
+        <a class="site-nav-link" href="{{ base_url }}links">
+          <span class="material-icons-outlined">link</span>
+          links
+        </a>
+        <div class="site-nav-loader"></div>
+      </nav>
 
-    <header class="site-header">
-      <h1 class="site-header-title">{{ header_title }}</h1>
-    </header>
+      <header class="site-header">
+        <h1 class="site-header-title">{{ header_title }}</h1>
+      </header>
 
-    <main>{% block main %} {% endblock %}</main>
+      <div class="site-container">
+        <div class="site-content">
+          <aside class="sidebar"></aside>
+          <main class="site-main">{% block main %} {% endblock %}</main>
+        </div>
+      </div>
 
-    <footer class="site-footer">
-      <small class="site-footer-copyright">&copy; {{ site_name }}</small>
-    </footer>
+      <footer class="site-footer">
+        <small class="site-footer-copyright">&copy; {{ site_name }}</small>
+      </footer>
+    </div>
+
+    <script src="{{ base_url }}static/js/main.js"></script>
   </body>
-  <script src="{{ base_url }}static/js/main.js"></script>
 </html>
