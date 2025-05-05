@@ -1,3 +1,9 @@
+{% set stripe_background = "repeating-linear-gradient(135deg, " ~
+    theme.colors.stripe_background1 ~ ", " ~
+    theme.colors.stripe_background1 ~ " 2px, " ~
+    theme.colors.stripe_background2 ~ " 2px, " ~
+    theme.colors.stripe_background2 ~ " 4px)" %}
+
 /* ==========================================
    RESET CSS（完全リセット）
    ========================================== */
@@ -85,7 +91,6 @@ body {
 }
 /* ========================================== */
 
-
 /* --- サイト全体 --- */
 html {
     font-size: 16px;
@@ -108,21 +113,25 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-
     width: 100%;
     height: 64px;
-    border-bottom: solid 4px {{ theme.colors.master_accent }};
-    background: repeating-linear-gradient(
-        135deg,
-        {{ theme.colors.stripe_background1 }},
-        {{ theme.colors.stripe_background1 }} 2px,
-        {{ theme.colors.stripe_background2 }} 2px,
-        {{ theme.colors.stripe_background2 }} 4px
-    );
+    background: {{ stripe_background }};
+    overflow: hidden;
+}
+.site-nav-loader {
+    position: absolute;
+    bottom: 2px;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    background-color: {{ theme.colors.master_accent }};
+    z-index: 0;
+    transition: width 0.3s ease;
 }
 .site-nav-link {
     position: relative;
     display: flex;
+    bottom: 2px;
     align-items: center;
     justify-content: center;
     height: 100%;
@@ -239,15 +248,13 @@ code {
 }
 
 /* --- コードブロック --- */
-.code-block {
-    background-color: {{ theme.colors.code_block_background }};
-    border-radius: 5px;
-}
 pre {
     font-family: {{ theme.fonts.code }};
+    background-color: {{ theme.colors.code_block_background }};
     color: {{ theme.colors.code_block_text }};
     font-size: 0.9rem;
     line-height: 1.5;
+    border-radius: 4px;
     overflow-x: auto;
     padding: 0.85rem 0.9rem;
 }
