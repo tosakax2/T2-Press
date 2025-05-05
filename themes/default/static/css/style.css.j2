@@ -199,7 +199,6 @@ html, body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     margin-right: 32px;
     width: 25%;
 
@@ -209,7 +208,6 @@ html, body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     width: 75%;
 
     background-color: {{ theme.colors.container_background }};
@@ -226,8 +224,9 @@ html, body {
     width: 100%;
     background: {{ stripe_background }};
 }
-.site-footer-copyright {
+.site-footer-text {
     font-size: 0.8rem;
+    line-height: 2.0;
     color: {{ theme.colors.stripe_text }};
 }
 
