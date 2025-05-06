@@ -64,8 +64,8 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   const updateClamps = () => {
-    document.querySelectorAll(".post-list-item-summary").forEach((el) => {
-      clampText(el, 3);
+    document.querySelectorAll(".post-list-item-preview-summary-text").forEach((el) => {
+      clampText(el, 5);
     });
   };
 

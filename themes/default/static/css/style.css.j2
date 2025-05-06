@@ -159,7 +159,7 @@ body {
     background-color: {{ theme.colors.master_accent }};
     color: {{ theme.colors.stripe_background1 }};
 }
-.site-nav-link > .material-icons-outlined {
+.site-nav-link > .material-symbols-outlined {
     font-size: 1.35rem;
     margin-right: 0.5rem;
 }
@@ -216,7 +216,6 @@ body {
     width: 100%;
     max-width: 720px;
     margin-bottom: 2rem;
-    background-color: {{ theme.colors.container_background }};
     border-radius: 4px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     box-sizing: border-box;
@@ -236,7 +235,7 @@ body {
     border-radius: 4px 4px 0 0;
     background: {{ stripe_background }};
 }
-.post-list-item-title {
+.post-list-item-header-title {
     font-size: 1.5rem;
     font-weight: bold;
     line-height: 1.3;
@@ -244,22 +243,44 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    max-width: 100%; /* 必須！親に対しての制限 */
+    max-width: 100%;
 }
-.post-list-item-date {
+.post-list-item-header-date {
     font-size: 0.9rem;
     line-height: 1.4;
     color: {{ theme.colors.stripe_text }};
 }
-.post-list-item-summary {
+.post-list-item-preview {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    border-radius: 0 0 4px 4px;
+    width: 100%;
+    height: 12rem;
+    margin: 0;
+    background-color: {{ theme.colors.container_background }};
+}
+.post-list-item-preview-summary {
+    width: 65%;
+}
+.post-list-item-preview-summary-text {
     font-size: 1rem;
     line-height: 2.0;
     overflow: hidden;
-    max-width: 100%;
     display: block;
     word-break: break-word; 
-    height: 6rem;
     margin: 1rem;
+}
+.post-list-item-preview-thumbnail {
+    width: 35%;
+}
+.post-list-item-preview-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0 0 4px 0;
+    margin: 0;
+    clip-path: polygon(15% 0, 100% 0, 100% 100%, 0% 100%);
 }
 
 /* --- サイト全体のフッター --- */

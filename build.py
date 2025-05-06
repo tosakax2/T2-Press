@@ -290,21 +290,17 @@ def notion_pull():
     if OUTPUT_DIR.exists():
         logger.info(f"📁 既存の出力先 {OUTPUT_DIR} を削除します")
         shutil.rmtree(OUTPUT_DIR)  # 出力フォルダを丸ごと削除（クリーンビルド）
-    OUTPUT_DIR.mkdir()  # 出力先のルートを作成
-    (OUTPUT_DIR / "posts").mkdir(parents=True, exist_ok=True)  # 記事用フォルダを作成
+    OUTPUT_DIR.mkdir()
+    (OUTPUT_DIR / "posts").mkdir(parents=True, exist_ok=True)
 
-    # --- static ファイルのコピー処理（テーマから） ---
+    # --- static ファイルのコピー ---
     theme_static = Path(f"themes/{THEME}/static")
     output_static = OUTPUT_DIR / "static"
-
     if theme_static.exists():
         logger.info("📂 テーマ static ファイルをコピー中...")
         for item in theme_static.rglob("*"):
             rel_path = item.relative_to(theme_static)
-
-            # .j2（テンプレート）ファイルはレンダリング、通常ファイルはコピー
             dest = output_static / rel_path.with_suffix('') if item.suffix == ".j2" else output_static / rel_path
-
             if item.is_dir():
                 safe_mkdir(dest)
             elif item.suffix == ".j2":
@@ -316,92 +312,64 @@ def notion_pull():
                 safe_mkdir(dest.parent)
                 shutil.copy2(item, dest)
 
-    # --- src フォルダの中身をコピー（任意の静的素材） ---
     if Path("src").exists():
         logger.info("📦 src ディレクトリをコピーします")
         shutil.copytree("src", OUTPUT_DIR / "src")
 
-    # --- Jinja2 テンプレート読み込み（post, index） ---
+    # --- テンプレート読み込み ---
     env = Environment(loader=FileSystemLoader(f"themes/{THEME}/templates"))
     tpl_post = env.get_template("post.html")
     tpl_index = env.get_template("index.html")
 
-    # --- Notion API を使って記事一覧を取得 ---
+    # --- Notion API から記事一覧を取得 ---
     try:
         response = notion.databases.query(
             database_id=NOTION_DATABASE_ID,
-            filter={"property": "公開", "checkbox": {"equals": True}}  # 公開フラグがONのものだけ取得
+            filter={"property": "公開", "checkbox": {"equals": True}}
         )
     except (APIResponseError, requests.exceptions.RequestException) as e:
         logger.info(f"❌ Notion APIエラー: {e}")
         raise
 
-    posts_info = []  # トップページに表示する記事一覧用データ
+    posts_info = []
 
-    # --- 各記事をHTMLとして生成 ---
     for page in response["results"]:
         props = page["properties"]
 
-        # 記事タイトル取得（空なら「無題」）
+        # タイトル
         title_data = props.get("記事", {}).get("title", [])
         title = title_data[0]["plain_text"] if title_data else "無題"
-
-        # スラッグ生成
         slug = to_slug(title)
         page_id = page["id"]
-
         logger.info(f"📝 記事: {title} (slug: {slug})")
 
-        # 記事本文（ブロック）を取得
+        # 本文ブロック取得
         blocks = notion.blocks.children.list(block_id=page_id)["results"]
-
         html_blocks = []
-        current_list_tag = None  # リストの開閉管理用（ul/ol）
+        current_list_tag = None
 
         for block in blocks:
             btype = block["type"]
             if btype in ["bulleted_list_item", "numbered_list_item"]:
                 tag = "ul" if btype == "bulleted_list_item" else "ol"
-
-                # リストのタグが切り替わったら閉じて開く
                 if current_list_tag != tag:
                     if current_list_tag:
                         html_blocks.append(f"</{current_list_tag}>")
                     html_blocks.append(f"<{tag}>")
                     current_list_tag = tag
-
                 html_blocks.append(render_list_block(block, notion))
-
             else:
-                # リストの途中で他のブロックが来たら閉じる
                 if current_list_tag:
                     html_blocks.append(f"</{current_list_tag}>")
                     current_list_tag = None
-
                 html_blocks.append(render_block_html(block, notion))
 
-        # 最後にリストが開いたままなら閉じる
         if current_list_tag:
             html_blocks.append(f"</{current_list_tag}>")
 
-        # 記事のHTMLコンテンツを連結
         content_html = "\n".join(html_blocks)
 
-        # 出力先フォルダを作成してHTMLファイルを書き出し
-        post_dir = OUTPUT_DIR / "posts" / slug
-        safe_mkdir(post_dir)
-        with open(post_dir / "index.html", "w", encoding="utf-8") as f:
-            f.write(tpl_post.render(title=title, content=content_html, **render_context))
-
-        # created_time を使って記事の日付を整形して追加
-        created_time = page.get("created_time")
-        if created_time:
-            dt = datetime.datetime.fromisoformat(created_time.replace("Z", "+00:00"))  # ISOフォーマットをパース
-            date_str = dt.strftime("%Y-%m-%d")  # お好みで "%Y年%m月%d日" にも変更可
-        else:
-            date_str = ""
-        
-        # 概要プロパティ or 本文冒頭から summary を生成
+        # 概要取得
         summary_data = props.get("概要", {}).get("rich_text", [])
         if summary_data:
             summary = render_rich_text(summary_data)
@@ -410,19 +378,46 @@ def notion_pull():
             for block in blocks:
                 if block["type"] == "paragraph":
                     raw_html = render_rich_text(block["paragraph"].get("rich_text", []))
-                    plain_text = re.sub(r"<.*?>", "", raw_html)  # タグ除去
+                    plain_text = re.sub(r"<.*?>", "", raw_html)
                     break
             summary = plain_text[:300]
 
-        # 投稿情報を追加（dateを含める）
+        # タグ取得
+        tags_data = props.get("タグ", {}).get("multi_select", [])
+        tags = [tag["name"] for tag in tags_data]
+
+        # 投稿日時
+        created_time = page.get("created_time")
+        if created_time:
+            dt = datetime.datetime.fromisoformat(created_time.replace("Z", "+00:00"))
+            date_str = dt.strftime("%Y-%m-%d")
+        else:
+            date_str = ""
+
+        # 各記事HTML出力
+        post_dir = OUTPUT_DIR / "posts" / slug
+        safe_mkdir(post_dir)
+        post_data = {
+            "title": title,
+            "content": content_html,
+            "tags": tags,
+            "date": date_str,
+            "summary": summary,
+            "url": f"posts/{slug}/index.html",
+        }
+        with open(post_dir / "index.html", "w", encoding="utf-8") as f:
+            f.write(tpl_post.render(post=post_data, **render_context))
+
+        # トップページ用に追加
         posts_info.append({
             "title": title,
             "url": f"posts/{slug}/index.html",
             "date": date_str,
-            "summary": summary
+            "summary": summary,
+            "tags": tags,
         })
 
-    # --- トップページ（記事一覧）を出力 ---
+    # トップページ出力
     with open(OUTPUT_DIR / "index.html", "w", encoding="utf-8") as f:
         f.write(tpl_index.render(posts=posts_info, **render_context))
 

@@ -1,5 +1,10 @@
-{% extends "base.html" %} {% set header_title = title %} {% block main %}
+{% extends "base.html" %} {% set header_title = post.title %} {% block main %}
 <article class="post">
-  <div class="post-content">{{ content | safe }}</div>
+  <div class="post-tag-list">
+    {% for tag in post.tags %}
+    <span class="post-tag-item">{{ tag }}</span>
+    {% endfor %}
+  </div>
+  <div class="post-content">{{ post.content | safe }}</div>
 </article>
 {% endblock %}

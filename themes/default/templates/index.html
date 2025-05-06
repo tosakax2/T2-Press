@@ -3,11 +3,20 @@
   {% for post in posts %}
   <a class="post-list-item" href="{{ post.url }}">
     <div class="post-list-item-header">
-      <div class="post-list-item-title">{{ post.title }}</div>
-      <div class="post-list-item-date">{{ post.date }}</div>
+      <div class="post-list-item-header-title">{{ post.title }}</div>
+      <div class="post-list-item-header-date">{{ post.date }}</div>
     </div>
-    <div class="post-list-item-info">
-      <div class="post-list-item-summary">{{ post.summary }}</div>
+    <div class="post-list-item-preview">
+      <div class="post-list-item-preview-summary">
+        <div class="post-list-item-preview-summary-text">{{ post.summary }}</div>
+      </div>
+      <div class="post-list-item-preview-thumbnail">
+        {% if post.thumbnail %}
+        <img src="{{ post.thumbnail }}" alt="Thumbnail" />
+        {% else %}
+        <img src="{{ base_url }}src/images/default-thumbnail.png" alt="Thumbnail" />
+        {% endif %}
+      </div>
     </div>
   </a>
   {% endfor %}
