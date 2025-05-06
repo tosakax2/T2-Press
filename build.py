@@ -393,7 +393,34 @@ def notion_pull():
         with open(post_dir / "index.html", "w", encoding="utf-8") as f:
             f.write(tpl_post.render(title=title, content=content_html, **render_context))
 
-        posts_info.append({"title": title, "url": f"posts/{slug}/index.html"})
+        # created_time を使って記事の日付を整形して追加
+        created_time = page.get("created_time")
+        if created_time:
+            dt = datetime.datetime.fromisoformat(created_time.replace("Z", "+00:00"))  # ISOフォーマットをパース
+            date_str = dt.strftime("%Y-%m-%d")  # お好みで "%Y年%m月%d日" にも変更可
+        else:
+            date_str = ""
+        
+        # 概要プロパティ or 本文冒頭から summary を生成
+        summary_data = props.get("概要", {}).get("rich_text", [])
+        if summary_data:
+            summary = render_rich_text(summary_data)
+        else:
+            plain_text = ""
+            for block in blocks:
+                if block["type"] == "paragraph":
+                    raw_html = render_rich_text(block["paragraph"].get("rich_text", []))
+                    plain_text = re.sub(r"<.*?>", "", raw_html)  # タグ除去
+                    break
+            summary = plain_text[:300]
+
+        # 投稿情報を追加（dateを含める）
+        posts_info.append({
+            "title": title,
+            "url": f"posts/{slug}/index.html",
+            "date": date_str,
+            "summary": summary
+        })
 
     # --- トップページ（記事一覧）を出力 ---
     with open(OUTPUT_DIR / "index.html", "w", encoding="utf-8") as f:
