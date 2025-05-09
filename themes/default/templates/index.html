@@ -4,7 +4,10 @@
   <a class="post-list-item" href="{{ post.url }}">
     <div class="post-list-item-header">
       <div class="post-list-item-header-title">{{ post.title }}</div>
-      <div class="post-list-item-header-date">{{ post.date }}</div>
+      <div class="post-list-item-header-date">
+        <span class="material-symbols-outlined">edit_calendar</span>
+        <span class="post-list-item-header-date-text">{{ post.date }}</span>
+      </div>
     </div>
     <div class="post-list-item-preview">
       <div class="post-list-item-preview-summary">

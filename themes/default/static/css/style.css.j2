@@ -256,6 +256,17 @@ body {
     max-width: 100%;
 }
 .post-list-item-header-date {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: right;
+}
+.post-list-item-header-date > .material-symbols-outlined {
+    font-size: 1rem;
+    margin-right: 0.5rem;
+    color: {{ theme.colors.stripe_text }};
+}
+.post-list-item-header-date-text {
     font-size: 0.9rem;
     line-height: 1.4;
     color: {{ theme.colors.stripe_text }};
@@ -308,6 +319,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: right;
+    margin-right: 1rem;
 }
 .post-date > .material-symbols-outlined {
     font-size: 1rem;
