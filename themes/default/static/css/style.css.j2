@@ -178,7 +178,7 @@ body {
     font-size: 2.5rem;
     font-weight: bold;
     line-height: 1.3;
-    padding: 0 2rem;
+    padding: 2rem;
 }
 
 /* --- サイト全体のメインコンテンツ --- */
@@ -190,7 +190,6 @@ body {
     padding: 0 16px;
     width: 100%;
     max-width: 1280px;
-    box-sizing: border-box;
 }
 .sidebar {
     display: flex;
@@ -204,6 +203,17 @@ body {
     flex-direction: column;
     align-items: center;;
     width: 75%;
+}
+@media screen and (max-width: 768px) {
+  .site-content {
+    padding 0;
+  }
+  .sidebar {
+    display: none;
+  }
+  .site-main {
+    width: 100%;
+  }
 }
 
 /* トップページの記事一覧 */
@@ -284,38 +294,41 @@ body {
 }
 
 /* --- 記事内のデータ --- */
-.post-container {
-
+.post-main {
+    border-radius: 8px;
+    padding: 1rem;
+    background-color: {{ theme.colors.container_background}};
 }
-
-/* --- 記事内のタグ --- */
+.post-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.post-date {
+    display: flex;
+    align-items: center;
+    justify-content: right;
+}
+.post-date > .material-symbols-outlined {
+    font-size: 1rem;
+    margin-right: 0.5rem;
+}
+.post-date-text {
+    font-size: 0.9rem;
+}
 .post-tag-list {
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 2rem;
 }
 .post-tag-list-item {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     border-radius: 0 4px 4px 0;
     margin: 0.5rem;
-    padding: 0.2rem 1rem 0.2rem 2rem;
+    padding: 0.2rem 0.5rem 0.2rem 1rem;
     background: {{ stripe_background }};
     color: {{ theme.colors.stripe_text }};
     clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%);
-}
-.post-tag-list-item::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 50%;
-    width: 0.5rem;
-    height: 0.5rem;
-    background-color: gray;
-    border-radius: 50%;
-}
-.post-tag-list-item:hover::before {
-    background-color: {{ theme.colors.master_accent }}:
 }
 
 /* --- サイト全体のフッター --- */
@@ -345,8 +358,6 @@ h1 {
 h2 {
     margin: 2rem 0 1rem;
     padding: 0.5em;
-    border-left: solid 8px {{ theme.colors.master_accent }};
-    border-radius: 8px 2px 2px 8px;
 
     font-size: 1.75rem;
     font-weight: bold;
@@ -363,7 +374,7 @@ h3 {
 p {
     font-size: 1rem;
     line-height: 1.6;
-    margin: 0 1.5rem;
+    margin: 0 1rem;
 }
 
 /* --- リンク --- */
@@ -391,7 +402,7 @@ ol ::marker {
 hr {
     border: none;
     border-top: 1px solid {{ theme.colors.divider }};
-    margin: 2rem 0;
+    margin: 1rem 0;
     width: 100%;
 }
 
@@ -415,6 +426,7 @@ pre {
     line-height: 1.5;
     border-radius: 4px;
     overflow-x: auto;
+    margin: 0 auto;
     padding: 0.85rem 0.9rem;
 }
 
@@ -462,14 +474,14 @@ td {
 
 /* --- 画像 ---*/
 img {
-    border-radius: 8px;
-    margin: 2rem auto;
+    border-radius: 4px;
+    margin: 1rem auto;
     display: block;
 }
 
 /* --- 動画 ---*/
 iframe {
-    border-radius: 8px;
-    margin: 2rem auto;
+    border-radius: 4px;
+    margin: 1rem auto;
     display: block;
 }
