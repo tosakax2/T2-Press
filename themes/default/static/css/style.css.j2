@@ -283,6 +283,41 @@ body {
     clip-path: polygon(15% 0, 100% 0, 100% 100%, 0% 100%);
 }
 
+/* --- 記事内のデータ --- */
+.post-container {
+
+}
+
+/* --- 記事内のタグ --- */
+.post-tag-list {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 2rem;
+}
+.post-tag-list-item {
+    font-size: 0.9rem;
+    border-radius: 0 4px 4px 0;
+    margin: 0.5rem;
+    padding: 0.2rem 1rem 0.2rem 2rem;
+    background: {{ stripe_background }};
+    color: {{ theme.colors.stripe_text }};
+    clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%);
+}
+.post-tag-list-item::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 0.5rem;
+    height: 0.5rem;
+    background-color: gray;
+    border-radius: 50%;
+}
+.post-tag-list-item:hover::before {
+    background-color: {{ theme.colors.master_accent }}:
+}
+
 /* --- サイト全体のフッター --- */
 .site-footer {
     display: flex;
